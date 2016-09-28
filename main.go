@@ -54,7 +54,7 @@ func main() {
 
 	fw := int(fc.PointToFixed(float64(*size))/72) + 1
 
-	rgba := image.NewRGBA(image.Rect(0, 0, 79, fw*len(args)+1))
+	rgba := image.NewRGBA(image.Rect(0, 0, *width, fw*len(args)+1))
 	draw.Draw(rgba, rgba.Bounds(), image.Black, image.ZP, draw.Src)
 
 	fc.SetClip(rgba.Bounds())
