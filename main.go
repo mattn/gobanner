@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/golang/freetype"
 )
@@ -21,10 +22,23 @@ var (
 func main() {
 	flag.Parse()
 
-	if *font == "" || flag.NArg() == 0 {
+	var args []string
+
+	if *font == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
+
+	if flag.NArg() == 0 {
+		b, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			log.Fatal(err)
+		}
+		args = strings.Split(string(b), "\n")
+	} else {
+		args = flag.Args()
+	}
+
 	b, err := ioutil.ReadFile(*font)
 	if err != nil {
 		log.Fatal(err)
@@ -40,16 +54,16 @@ func main() {
 
 	fw := int(fc.PointToFixed(float64(*size)) / 72)
 
-	rgba := image.NewRGBA(image.Rect(0, 0, 79, fw*flag.NArg()+1))
+	rgba := image.NewRGBA(image.Rect(0, 0, 79, fw*len(args)+1))
 	draw.Draw(rgba, rgba.Bounds(), image.Black, image.ZP, draw.Src)
 
 	fc.SetClip(rgba.Bounds())
 	fc.SetDst(rgba)
 	fc.SetSrc(image.White)
 
-	for i := 0; i < flag.NArg(); i++ {
+	for i := 0; i < len(args); i++ {
 		pt := freetype.Pt(0, fw*(i+1))
-		fc.DrawString(flag.Arg(i), pt)
+		fc.DrawString(args[i], pt)
 	}
 
 	for y := 0; y < rgba.Bounds().Dy(); y++ {
