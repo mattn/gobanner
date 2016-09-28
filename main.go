@@ -21,7 +21,7 @@ var (
 func main() {
 	flag.Parse()
 
-	if *font == "" {
+	if *font == "" || flag.NArg() == 0 {
 		flag.Usage()
 		os.Exit(1)
 	}
