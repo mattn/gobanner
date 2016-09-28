@@ -52,7 +52,7 @@ func main() {
 	fc.SetFont(f)
 	fc.SetFontSize(float64(*size))
 
-	fw := int(fc.PointToFixed(float64(*size)) / 72)
+	fw := int(fc.PointToFixed(float64(*size))/72) + 1
 
 	rgba := image.NewRGBA(image.Rect(0, 0, 79, fw*len(args)+1))
 	draw.Draw(rgba, rgba.Bounds(), image.Black, image.ZP, draw.Src)
